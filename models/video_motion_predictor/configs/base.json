@@ -1,0 +1,37 @@
+{
+    "_name_or_path": "./",
+    "model_type": "VideoMAEv2_Base",
+    "architectures": [
+      "VideoMAEv2_Base"
+    ],
+    "auto_map": {
+        "AutoModel": "modeling_videomaev2.VideoMAEv2",
+        "AutoConfig": "modeling_config.VideoMAEv2Config"
+    },
+    "model_config":{
+      "img_size": 224,
+      "patch_size": 16,
+      "in_chans": 3,
+      "num_classes": 0,
+      "embed_dim": 768,
+      "depth": 12,
+      "num_heads": 12,
+      "mlp_ratio": 4,
+      "qkv_bias": true,
+      "qk_scale": null,
+      "drop_rate": 0.0,
+      "attn_drop_rate": 0.0,
+      "drop_path_rate": 0.0,
+      "norm_layer": "nn.LayerNorm",
+      "layer_norm_eps": 1e-6,
+      "init_values": 0.0,
+      "use_learnable_pos_emb": false,
+      "tubelet_size": 2,
+      "use_mean_pooling": true,
+      "with_cp": false,
+      "num_frames": 16,  
+      "cos_attn": false
+    },
+    "transformers_version": "4.38.0",
+    "use_cache": true
+}

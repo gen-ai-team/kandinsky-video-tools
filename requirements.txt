@@ -1,0 +1,9 @@
+imageio[pyav] # video loading and decoding
+easydict
+ipykernel # demo
+torch>=2.6.0
+torchvision>=0.21.0
+einops
+huggingface-hub>=0.32.2
+transformers>=4.38.0 # VideoMAEv2 implementation requirement
+timm>=1.0.15

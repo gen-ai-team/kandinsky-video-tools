@@ -1,0 +1,1 @@
+from .video_motion_predictor import VideoMotionPredictor
