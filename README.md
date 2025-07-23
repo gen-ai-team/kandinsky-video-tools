@@ -84,8 +84,15 @@ All the proposed values below should be tuned on your specific dataset to achiev
 
 ## Camera Motion Classifier
 
-[VideoMAE model](https://huggingface.co/docs/transformers/model_doc/videomae)(`large`) variant that has been finetuned for multi-label video classification (a video can belong to multiple classes simultaneously) for camera motion classification on internal dataset.
+[VideoMAE model](https://huggingface.co/docs/transformers/model_doc/videomae)(`large`) variant that has been finetuned for multi-label video classification (a video can belong to multiple classes simultaneously) for camera motion classification on internal dataset. The model predicts `18` different camera motion  `'arc_left', 'arc_right',  'dolly_in', 'dolly_out', 'pan_left', 'pan_right',  'pedestal_down',  'pedestal_up', 'roll_left',  'roll_right',  'static', 'tilt_down', 'tilt_up',  'truck_left', 'truck_right',  'undefined', 'zoom_in', 'zoom_out'` and and `3` shot type classes:  `'pov', 'shake',  'track' ` .
 
+<p align="center">
+   <img
+      src="assets/camera_motion/camera-movements.png"
+      alt="Camera Motions"
+      width="60%"
+   />
+</p>
 
 Model was trained to associate **entire video** with camera labels, not frame-level motions(!): [input video] -> label/labels (because multilabel) for all video.  So, if this camera motion exists during all video frames model should predict this motion, otherwise it should predict `undefined`.
 
