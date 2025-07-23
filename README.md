@@ -3,6 +3,8 @@ In this repository we release a set of neural networks for video motion analysis
 
 1. [Video Motion Predictor](#video-motion-predictor) - a model able to predict the magnitude of 3 motion categories: camera motion, object motion and other dynamics (change of lighting conditions, color and focus change or blur).
 
+2. [Camera Motion Classifier](#camera-motion-classifier) - a model predicts `18` different camera motion  `'arc_left', 'arc_right',  'dolly_in', 'dolly_out', 'pan_left', 'pan_right',  'pedestal_down',  'pedestal_up', 'roll_left',  'roll_right',  'static', 'tilt_down', 'tilt_up',  'truck_left', 'truck_right',  'undefined', 'zoom_in', 'zoom_out'` and and `3` shot type classes:  `'pov', 'shake',  'track' ` .
+
 
 ## Installation
 ```properties
@@ -77,3 +79,52 @@ All the proposed values below should be tuned on your specific dataset to achiev
 
 4. ***Validation metric*** \
    These motion scores can show if your generative model is able to produce dynamic videos with camera motion and object motion.
+
+---
+
+## Camera Motion Classifier
+
+[VideoMAE model](https://huggingface.co/docs/transformers/model_doc/videomae)(`large`) variant that has been finetuned for multi-label video classification (a video can belong to multiple classes simultaneously) for camera motion classification on internal dataset.
+
+
+Model was trained to associate **entire video** with camera labels, not frame-level motions(!): [input video] -> label/labels (because multilabel) for all video.  So, if this camera motion exists during all video frames model should predict this motion, otherwise it should predict `undefined`.
+
+The model is configured to process `config.num_frames=16` frames per input clip. These frames are extracted uniformly from the input video, regardless of its original duration. For videos longer than **2 seconds**, processing the entire video as a single clip may miss temporal nuances (e.g., varying camera motions). So, recommended workflow for such videos will be follows:
+
+ (a) split the video into non-overlapping 2-second segments (or sliding windows with optional overlap).
+
+ (b) run inference independently on each segment. 
+
+ (c) post-process results.
+
+
+ Model accurucy on internal test dataset of 2s videos is **75%**, ignoring `'pov', 'shake', 'track'` classes ~- **84%**.
+
+ ### Usage example
+Full demo code can be found in [this notebook](demo/camera_motion_classifier_demo.ipynb). \
+Weights are available on huggingface: [ai-forever/kandinsky-videomae-large-camera-motion](https://huggingface.co/ai-forever/kandinsky-videomae-large-camera-motion).
+
+```python
+from transformers import (
+    VideoMAEImageProcessor, VideoMAEForVideoClassification
+)
+
+
+video_path = "../assets/video_motion_predictor/examples/mixed/girl-listens-to-music-and-dances-happily[mixkit].mp4"
+
+model = VideoMotionPredictor.from_pretrained("ai-forever/kandinsky-video-motion-predictor").to("cuda")
+model_ckpt = "ai-forever/kandinsky-videomae-large-camera-motion"
+image_processor = VideoMAEImageProcessor.from_pretrained(model_ckpt)
+
+model = VideoMAEForVideoClassification.from_pretrained(model_ckpt).eval().to(device)
+# inputs torch.Size([bs, 16, 3, 224, 224])
+with torch.no_grad():
+   outputs = model(inputs)
+
+logits = outputs.logits.float()
+probs = torch.sigmoid(logits).cpu().numpy()[0]  # multi-label
+
+preds = (probs > 0.5).astype(int)
+predicted_labels = [model.config.id2label[i] for i, p in enumerate(preds) if p == 1]
+
+```
