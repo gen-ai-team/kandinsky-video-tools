@@ -98,7 +98,7 @@ The model is configured to process `config.num_frames=16` frames per input clip.
  (c) post-process results.
 
 
- Model accurucy on internal test dataset of 2s videos is **75%**, ignoring `'pov', 'shake', 'track'` classes ~- **84%**.
+ Model accurucy on internal test dataset of 2s videos is **75%**, ignoring `'pov', 'shake', 'track'` classes - **84%**.
 
  ### Usage example
 Full demo code can be found in [this notebook](demo/camera_motion_classifier_demo.ipynb). \
@@ -108,9 +108,6 @@ Weights are available on huggingface: [ai-forever/kandinsky-videomae-large-camer
 from transformers import (
     VideoMAEImageProcessor, VideoMAEForVideoClassification
 )
-
-
-video_path = "../assets/video_motion_predictor/examples/mixed/girl-listens-to-music-and-dances-happily[mixkit].mp4"
 
 model = VideoMotionPredictor.from_pretrained("ai-forever/kandinsky-video-motion-predictor").to("cuda")
 model_ckpt = "ai-forever/kandinsky-videomae-large-camera-motion"
