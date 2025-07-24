@@ -132,3 +132,18 @@ preds = (probs > 0.5).astype(int)
 predicted_labels = [model.config.id2label[i] for i, p in enumerate(preds) if p == 1]
 
 ```
+
+## 🤝 Citation
+
+If you use this work in your research, please cite:
+
+```bibtex
+@misc{kandinskyvideotools2025,
+  author = {Denis Koposov and Anna Dmitrienko and Ivan Kirillov and Kirill Chernyshev and Denis Parkhomenko and Vladimir Korviakov},
+  title = {Kandinsky Video Tools},
+  year = {2025},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/gen-ai-team/kandinsky-video-tools)}
+}
+```
